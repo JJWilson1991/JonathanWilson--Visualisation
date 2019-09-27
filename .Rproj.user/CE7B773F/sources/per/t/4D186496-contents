@@ -1,0 +1,87 @@
+---
+title: "JonathanWilson-Visualisation"
+author: "JJWilson"
+date: "27/09/2019"
+output: html_document
+---
+
+Initially load all packages and dataset required for attempting to reproduce figure from the data.
+
+
+For this exercise I tried to reproduce the figure from [A Statistical Analysis of the Work of Bob Ross](https://fivethirtyeight.com/features/a-statistical-analysis-of-the-work-of-bob-ross/) because everyone loves trees.
+
+
+```{r}
+library(tidyverse)
+
+library(dplyr)
+
+library(readr)
+
+library(knitr)
+
+library(ggplot2)
+
+library(fivethirtyeight)
+
+library(ggthemes)
+```
+
+
+```
+
+There is a fivethirtyeight package which provides access to the Bob Ross data
+
+
+```
+```{r}
+
+BRdf <- bob_ross
+
+setwd("C:/Users/Jonathan/Desktop/epid8060fall2019/JonathanWilson--Visualisation")
+
+```
+
+Have a look at the data to establish what you are working with.
+
+
+
+```{r}
+
+
+glimpse(BRdf)
+
+```
+We see we have 403 observations from 71 variables.
+we only want the counts of the features, so the episode number, season etc are irrelavant so we can get rid of those.
+We can then sum each feature.
+
+```{r}
+
+features <- as.data.frame(BRdf %>%  select(-episode, -season, -episode_num ,-title) %>% summarise_all(funs(sum))  %>% t())
+
+                        
+```
+We can use this to find out in what percentage of paintings each feature appeared.
+
+
+```{r}
+percentage_features <- features %>% rownames_to_column() %>% 
+  select(feature=rowname, tot = V1) %>% 
+  mutate(feature_percentage = tot/ nrow(BRdf)*100, 
+    feature_percentage_label = paste0(round(feature_percentage,1)))
+
+
+```
+Now we get to trying to remake the figure aka the extremely frustrating part.
+Getting the "Broad Strokes" (painitng pun) in place was ok, but actually getting down to the nitty gritty of making it look like the figure has been very unrewarding, given that i've been out of town at a conference this week so haven't had the time to devote to figuring out exactly how to get it looking pretty, but i'll keep tinkering and see if i can get closer to the original.
+
+
+```{r}
+feature_percentage_cutoff <- 2 #2% most present features
+ggplot(data=filter(percentage_features,feature_percentage>feature_percentage_cutoff), aes(x=reorder(feature,feature_percentage),y=feature_percentage)) + 
+  geom_bar(stat='identity', color='white') + geom_col(color='white', fill='blue') + geom_text(aes(label=feature_percentage_label), position=position_dodge(width=0.9), vjust=.5,hjust=0,size=2.5,color='black') + 
+  coord_flip() +   theme_fivethirtyeight() +
+  ggtitle('The Paintings of Bob Ross')
+
+```
