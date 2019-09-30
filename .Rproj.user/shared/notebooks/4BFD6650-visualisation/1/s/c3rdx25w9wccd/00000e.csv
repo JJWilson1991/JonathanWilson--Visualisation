@@ -1,6 +1,0 @@
-"0","percentage_features <- features %>% rownames_to_column() %>% "
-"0","  select(feature=rowname, tot = V1) %>% "
-"0","  mutate(feature_percentage = tot/ nrow(BRdf)*100, "
-"0","    feature_percentage_label = paste0(round(feature_percentage,1)))"
-"0",""
-"0",""

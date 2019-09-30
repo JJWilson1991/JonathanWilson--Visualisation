@@ -1,6 +1,0 @@
-"0","feature_percentage_cutoff <- 2 #2% most present features"
-"0","ggplot(data=filter(percentage_features,feature_percentage>feature_percentage_cutoff), aes(x=reorder(feature,feature_percentage),y=feature_percentage)) + "
-"0","  geom_bar(stat='identity', color='white') + geom_col(color='white', fill='blue') + geom_text(aes(label=feature_percentage_label), position=position_dodge(width=0.9), vjust=.5,hjust=0,size=2.5,color='black') + "
-"0","  coord_flip() +   theme_fivethirtyeight() +"
-"0","  ggtitle('The Paintings of Bob Ross')"
-"0",""
